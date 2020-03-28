@@ -3,13 +3,10 @@
 <?php
 session_start();
 require('dbconnect.php');
-$_SESSION['username'] = "loganhylton";
 if (!isset($_SESSION['username'])) {
     echo "test";
     header("Location: login.php");
 }
-$_SESSION['fname'] = "Logan";
-$_SESSION['lname'] = "Hylton";
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['remove-todo'])) {
@@ -30,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="javascript: nav_click('dashboard');">To Do Destroyer</a>
     <ul class="navbar-nav px-3">
         <li class="nav-item text-nowrap">
-            <a class="nav-link" href="sign_out.php">Sign out</a>
+            <a class="nav-link" href="signout.php">Sign out</a>
         </li>
     </ul>
 </nav>
