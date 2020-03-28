@@ -3,6 +3,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ((empty($_POST['username'])) or (empty($_POST['fname'])) or (empty($_POST['lname'])) or (empty($_POST['email'])) or (empty($_POST['password']))) {
         echo 'Please fill out all the fields!';
     }
+    else if (($_POST['password']) != ($_POST['confirm_password'])){
+        echo 'Make sure your passwords match...';
+    }
     else{
         require("dbconnect.php");
         session_start();
@@ -12,18 +15,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $fname = $_POST['fname'];
         $lname = $_POST['lname'];
         $email = $_POST['email'];
-        $sql = "INSERT INTO \"user\" (username, \"password\", first_name, last_name, email) values ('$username', '$password', '$fname','$lname','$email')";
-        $statement = $db->prepare($sql);
-        $statement->execute();
-        #echo $statement->fetch();
-        $statement->closeCursor();
-        $_SESSION['username'] = 'username';
-        $_SESSION['fname'] = 'fname';
-        $_SESSION['lname'] = 'lname';
-        header("Location: index.html");
-        #echo "Nice!";
-     }
-    
+        $username_list = "SELECT * FROM \"user\" WHERE username= '$username'";
+        $result = $db->prepare($username_list);
+        $result->execute();
+        if ($result->rowCount() == 1) {
+            echo 'Username already taken. Choose something better?';
+            $result->closeCursor();
+        }
+        else{
+            $result->closeCursor();
+            $sql = "INSERT INTO \"user\" (username, \"password\", first_name, last_name, email) values ('$username', '$password', '$fname','$lname','$email')";
+            $statement = $db->prepare($sql);
+            $statement->execute();
+            #echo $statement->fetch();
+            $statement->closeCursor();
+            $_SESSION['username'] = 'username';
+            $_SESSION['fname'] = 'fname';
+            $_SESSION['lname'] = 'lname';
+            header("Location: index.php");
+        }
+    }
+
 }
 ?>
 
