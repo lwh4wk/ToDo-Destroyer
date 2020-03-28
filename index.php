@@ -2,7 +2,7 @@
 <html lang="en">
 <?php
 session_start();
-//$_SESSION['username'] = "loganhylton";
+$_SESSION['username'] = "loganhylton";
 if (!isset($_SESSION['username'])) {
     echo "test";
     header("Location: login.php");
