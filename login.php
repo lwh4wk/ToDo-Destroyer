@@ -6,13 +6,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     else{
         require("dbconnect.php");
         session_start();
-        $_SESSION['username'] = $_POST['username'];
         $username = $_POST['username'];
         $password = $_POST['password'];
         $username_list = "SELECT * FROM \"user\" WHERE username= '$username' AND password='$password'";
         $result = $db->prepare($username_list);
         $result->execute();
-        if ($result->rowCount() == 1) {
+        if ($result->rowCount() > 0) {
             $result->closeCursor();
             $_SESSION['username'] = 'username';
             $row = $result->fetch();
