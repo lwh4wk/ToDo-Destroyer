@@ -24,14 +24,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         else{
             $result->closeCursor();
+            $password = password_hash($password, PASSWORD_BCRYPT);
             $sql = "INSERT INTO \"user\" (username, \"password\", first_name, last_name, email) values ('$username', '$password', '$fname','$lname','$email')";
             $statement = $db->prepare($sql);
             $statement->execute();
             #echo $statement->fetch();
             $statement->closeCursor();
-            $_SESSION['username'] = $username;
-            $_SESSION['fname'] =  $fname;
-            $_SESSION['lname'] = $lname;
+            $_SESSION['username'] = 'username';
+            $_SESSION['fname'] = 'fname';
+            $_SESSION['lname'] = 'lname';
             header("Location: index.php");
         }
     }
@@ -64,8 +65,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <input class="form-control" type="text" id="username" name="username"><br>
         <label for="password">Password:</label><br>
         <input class="form-control" type="password" id="password" name="password"><br>
-        <label for="confirm_password">Confirm Password:</label><br>
-        <input class="form-control" type="test" id="confirm_password" name="confirm_password"><br>
+        <label for="password">Confirm Password:</label><br>
+        <input class="form-control" type="password" id="password" name="confirm_password"><br>
         <input type="submit" value="Submit">
     </form>
     </span>
