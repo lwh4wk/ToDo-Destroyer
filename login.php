@@ -13,17 +13,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result->execute();
         if ($result->rowCount() > 0) {
             $result->closeCursor();
-            $_SESSION['username'] = $_POST['username'];
-            $first_name = "SELECT 'first_name' FROM \"user\" WHERE username= '$username' AND password='$password'";
-            $last_name = "SELECT 'last_name' FROM \"user\" WHERE username= '$username' AND password='$password'";
-            $f_result = $db->prepare($first_name);
-            $f_result->execute();
-            $l_result = $db->prepare($last_name);
-            $l_result->execute();
-            $_SESSION['fname'] = $f_result->fetch()[0];
-            $_SESSION['lname'] = $l_result->fetch()[0];
-            $l_result->closeCursor();
-            $f_result->closeCursor();
+            $_SESSION['username'] = 'username';
+            $row = $result->fetch();
+            $_SESSION['fname'] = $row[2];
+            $_SESSION['lname'] = $row[3];
             header("Location: index.php");
         }
         else{
@@ -49,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </style>
     <div class="container">
     <span>
-        <h1>Sign up!</h1>
+        <h1>Login to Todo Destroyer</h1>
     <form method="POST" action="">
         <label for="username">Username:</label><br>
         <input class="form-control" type="text" id="username" name="username"><br>
@@ -57,5 +50,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <input class="form-control" type="password" id="password" name="password"><br>
         <input type="submit" value="Submit">
     </form>
+        <h1></h1>
     </span>
     </div>
