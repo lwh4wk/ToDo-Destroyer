@@ -15,6 +15,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $statement->execute();
         $statement->closeCursor();
     }
+    if (isset($_POST['remove-assignment'])) {
+        $title = $_POST['title'];
+        $due_date = $_POST['dueDate'];
+        $statement = $db->prepare("Delete from \"assignment\" where username='" . $_SESSION['username'] . "' and title='$title' and due_date='$due_date';");
+        $statement->execute();
+        $statement->closeCursor();
+    }
 }
 ?>
 <head>
@@ -146,20 +153,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <th scope="col">Title</th>
                     <th scope="col">Description</th>
                     <th scope="col">Due Date</th>
+                    <th scope="col">Remove</th>
                     </thead>
-                    <tbod>
+                    <tbody>
                         <?php
                         $statement = $db->prepare("select * from \"assignment\" where username='" . $_SESSION['username'] . "';");
                         $statement->execute();
-                        foreach ($statement->fetchAll() as $row) {
-                            echo "<tr>
-                                      <td>$row[1]</td>
-                                      <td>$row[2]</td>
-                                      <td><script>document.write((new Date('$row[3]')).toDateString())</script></td>
-                                  </tr>";
+                        foreach ($statement->fetchAll() as $row) {?>
+                            <tr>
+                                <td><?php echo $row[1] ?></td>
+                                <td><?php echo $row[2] ?></td>
+                                <td>
+                                    <script>
+                                        date = "<?php echo $row[3]; ?>".split('-');
+                                        document.write(new Date(parseInt(date[0]), parseInt(date[1]) - 1, parseInt(date[2])).toDateString());
+                                    </script></td>
+                                <td>
+                                    <form action="" method="post" onsubmit="return confirm('Are you sure you would like to remove this assignment?');">
+                                        <input value="true" name="remove-assignment" hidden/>
+                                        <input value="<?php echo $row[1] ?>" name="title" hidden/>
+                                        <input value="<?php echo $row[3] ?>" name="dueDate" hidden/>
+                                        <input type="submit" class="btn btn-danger" value="Remove"/>
+                                    </form>
+                                </td>
+                            </tr>
+                        <?php
                         }
                         ?>
-                    </tbod>
+                    </tbody>
                 </table>
             </section>
         </main>
