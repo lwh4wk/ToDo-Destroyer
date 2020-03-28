@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['username'] = 'username';
         $_SESSION['fname'] = 'fname';
         $_SESSION['lname'] = 'lname';
-        header("Location: index.html");
+        header("Location: index.php");
         #echo "Nice!";
      }
     
