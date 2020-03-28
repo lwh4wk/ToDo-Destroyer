@@ -13,7 +13,7 @@ $password = '09f1125e80242fb76906615bfce55685e21fae4c2f0e6a054a35907c32366c71';
 // and the name of the database. If the MySQL database is running on the same server
 // as PHP, use the localhost keyword to specify the host computer
 
-$dsn = "mysql:host=$hostname;dbname=$dbname";
+$dsn = "postgresql:host=$hostname;dbname=$dbname";
 
 // To connect to a MySQL database named web4640, need three arguments:
 // - specify a DSN, username, and password
