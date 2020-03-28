@@ -2,13 +2,23 @@
 <html lang="en">
 <?php
 session_start();
-//$_SESSION['username'] = "loganhylton";
+require('dbconnect.php');
+$_SESSION['username'] = "loganhylton";
 if (!isset($_SESSION['username'])) {
     echo "test";
     header("Location: login.php");
 }
 $_SESSION['fname'] = "Logan";
 $_SESSION['lname'] = "Hylton";
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if (isset($_POST['remove-todo'])) {
+        $title = $_POST['title'];
+        $statement = $db->prepare("Delete From todo where username='" . $_SESSION['username'] . "' and title='$title'");
+        $statement->execute();
+        $statement->closeCursor();
+    }
+}
 ?>
 <head>
     <meta charset="UTF-8">
@@ -57,14 +67,13 @@ $_SESSION['lname'] = "Hylton";
                 ?></h3>
                 <hr/>
                 <h2>To Do List</h2>
-                <table class="table">
-                    <thead class="thead">
-                        <th>Title</th>
-                        <th>Description</th>
+                <table class="table table-bordered table-hover">
+                    <thead class="thead-light">
+                        <th scope="col">Title</th>
+                        <th scope="col">Description</th>
                     </thead>
                     <tbody>
                     <?php
-                    require('dbconnect.php');
                     $statement = $db->prepare("select * from todo where username='" . $_SESSION['username'] . "';");
                     $statement->execute();
                     foreach ($statement->fetchAll() as $row) {
@@ -73,15 +82,88 @@ $_SESSION['lname'] = "Hylton";
                                 "<td>$row[2]</td>" .
                             "</tr>";
                     }
+                    $statement->closeCursor();
                     ?>
                     </tbody>
+                </table>
+                <hr/>
+                <h2>Assignments</h2>
+                <table class="table table-bordered table-hover">
+                    <thead class="thead-light">
+                        <th scope="col">Title</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Due Date</th>
+                    </thead>
+                    <tbod>
+                        <?php
+                        $statement = $db->prepare("select * from \"assignment\" where username='" . $_SESSION['username'] . "';");
+                        $statement->execute();
+                        foreach ($statement->fetchAll() as $row) {
+                            echo "<tr>
+                                      <td>$row[1]</td>
+                                      <td>$row[2]</td>
+                                      <td><script>document.write((new Date('$row[3]')).toDateString())</script></td>
+                                  </tr>";
+                        }
+                        ?>
+                    </tbod>
                 </table>
             </section>
             <section id="todo" hidden>
                 <h1>To Do Items</h1><hr/>
+                <table class="table table-bordered table-hover">
+                    <thead class="thead-light">
+                    <th scope="col">Title</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Remove</th>
+                    </thead>
+                    <tbody>
+                    <?php
+                    $statement = $db->prepare("select * from todo where username='" . $_SESSION['username'] . "';");
+                    $statement->execute();
+                    foreach ($statement->fetchAll() as $row) {
+                        ?>
+                        <tr>
+                            <td><?php echo $row[1] ?></td>
+                            <td><?php echo $row[2] ?></td>
+                            <td>
+                                <form method="post" action="" onsubmit="return confirm('Are you sure you want to delete this item?')">
+                                    <input type="text" value="true" name="remove-todo" hidden />
+                                    <input type="text" value="<?php echo $row[1] ?>" name="title" hidden/>
+                                    <input type="submit" class="btn btn-danger"/>
+                                </form>
+                            </td>
+                        </tr>
+                    <?php
+                    }
+                    $statement->closeCursor();
+                    ?>
+                    </tbody>
+                </table>
             </section>
             <section id="assignments" hidden>
                 <h1>Assignments</h1>
+                <hr/>
+                <table class="table table-bordered table-hover">
+                    <thead class="thead-light">
+                    <th scope="col">Title</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Due Date</th>
+                    </thead>
+                    <tbod>
+                        <?php
+                        $statement = $db->prepare("select * from \"assignment\" where username='" . $_SESSION['username'] . "';");
+                        $statement->execute();
+                        foreach ($statement->fetchAll() as $row) {
+                            echo "<tr>
+                                      <td>$row[1]</td>
+                                      <td>$row[2]</td>
+                                      <td><script>document.write((new Date('$row[3]')).toDateString())</script></td>
+                                  </tr>";
+                        }
+                        ?>
+                    </tbod>
+                </table>
             </section>
         </main>
     </div>
