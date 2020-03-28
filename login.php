@@ -8,15 +8,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         session_start();
         $username = $_POST['username'];
         $password = $_POST['password'];
-        $username_list = "SELECT * FROM \"user\" WHERE username= '$username' AND password='$password'";
+        $username_list = "SELECT * FROM \"user\" WHERE username= '$username'";
         $result = $db->prepare($username_list);
         $result->execute();
-        if ($result->rowCount() > 0) {
-            $result->closeCursor();
+        $row = $result->fetch();
+        if (password_verify($password, $row[1])) {
             $_SESSION['username'] = 'username';
-            $row = $result->fetch();
             $_SESSION['fname'] = $row[2];
             $_SESSION['lname'] = $row[3];
+            $result->closeCursor();
             header("Location: index.php");
         }
         else{
@@ -29,18 +29,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <style>
-        .container {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            -moz-transform: translateX(-50%) translateY(-50%);
-            -webkit-transform: translateX(-50%) translateY(-50%);
-            transform: translateX(-50%) translateY(-50%);
-        }
-    </style>
-    <div class="container">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<style>
+    .container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -moz-transform: translateX(-50%) translateY(-50%);
+        -webkit-transform: translateX(-50%) translateY(-50%);
+        transform: translateX(-50%) translateY(-50%);
+    }
+</style>
+<div class="container">
     <span>
         <h1>Login to Todo Destroyer</h1>
     <form method="POST" action="">
@@ -52,4 +52,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </form>
         <h1></h1>
     </span>
-    </div>
+</div>
