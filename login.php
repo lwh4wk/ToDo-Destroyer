@@ -6,25 +6,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     else{
         require("dbconnect.php");
         session_start();
-        $_SESSION['username'] = $_POST['username'];
         $username = $_POST['username'];
         $password = $_POST['password'];
         $username_list = "SELECT * FROM \"user\" WHERE username= '$username' AND password='$password'";
         $result = $db->prepare($username_list);
         $result->execute();
-        if ($result->rowCount() == 1) {
+        if ($result->rowCount() > 0) {
             $result->closeCursor();
-            $_SESSION['username'] = 'username';
+            $_SESSION['username'] = $_POST['username'];
             $first_name = "SELECT 'first_name' FROM \"user\" WHERE username= '$username' AND password='$password'";
             $last_name = "SELECT 'last_name' FROM \"user\" WHERE username= '$username' AND password='$password'";
             $f_result = $db->prepare($first_name);
             $f_result->execute();
             $l_result = $db->prepare($last_name);
             $l_result->execute();
-            $_SESSION['fname'] = $f_result;
-            $_SESSION['lname'] = $l_result;
+            $_SESSION['fname'] = $f_result->fetch()[0];
+            $_SESSION['lname'] = $l_result->fetch()[0];
             $l_result->closeCursor();
             $f_result->closeCursor();
+            echo $_SESSION['username'];
+            echo $_SESSION['fname'];
+            echo $_SESSION['lname'];
             header("Location: index.php");
         }
         else{
