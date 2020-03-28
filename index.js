@@ -8,17 +8,9 @@ app = express();
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/', (req, res) => res.sendFile('index.html'));
-
-
-
-
-
-
-
-
-
-
+app.get('/', (req, res) => {
+   res.redirect('/home');
+});
 
 
 
