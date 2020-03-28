@@ -3,7 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous"></head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style>
+        a:hover {
+            color: blue;
+        }
+    </style>
+</head>
 <body>
 <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
     <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Company name</a>
@@ -20,21 +26,41 @@
             <div class="sidebar-sticky">
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link active" href="#">
+                        <a class="nav-link" href="javascript: nav_click('dashboard');">
                             <span data-feather="home"></span>
                             Dashboard <span class="sr-only">(current)</span>
                         </a>
                     </li>
-
+                    <li class="nav-item">
+                        <a class="nav-link" href="javascript: nav_click('todo');">To Do Items</a>
+                    </li>
                 </ul>
             </div>
         </nav>
 
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-
+            <section id="dashboard">
+                <h1>Dashboard</h1><hr/>
+            </section>
+            <section id="todo" hidden>
+                <h1>To Do Items</h1><hr/>
+            </section>
         </main>
     </div>
 </div>
+
+
+<script>
+    function nav_click(nav) {
+        if (document.getElementById(nav).hidden != false) {
+            let sections = document.getElementsByTagName("section");
+            for (let i = 0; i < sections.length; i++) {
+                sections[i].hidden = true;
+            }
+            document.getElementById(nav).hidden = false;
+        }
+    }
+</script>
 
 <!-- Bootstrap core JavaScript
 ================================================== -->
