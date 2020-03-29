@@ -111,8 +111,8 @@ if (!isset($_SESSION['username'])) {
 
 
 <script>
-    if (window.localStorage.getItem("currentPage")) {
-        nav_click(window.localStorage.getItem("currentPage"));
+    if (window.sessionStorage.getItem("currentPage")) {
+        nav_click(window.sessionStorage.getItem("currentPage"));
     } else {
         nav_click('dashboard');
     }
@@ -124,7 +124,7 @@ if (!isset($_SESSION['username'])) {
             }
             document.getElementById(nav).hidden = false;
         }
-        window.localStorage.setItem("currentPage", nav);
+        window.sessionStorage.setItem("currentPage", nav);
     }
 </script>
 

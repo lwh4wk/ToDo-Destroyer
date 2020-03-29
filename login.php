@@ -32,32 +32,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 </head>
 
-<style>
-    .container {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        -moz-transform: translateX(-50%) translateY(-50%);
-        -webkit-transform: translateX(-50%) translateY(-50%);
-        transform: translateX(-50%) translateY(-50%);
-    }
-</style>
 <header>
     <?php include('navbar.php'); ?>
 </header>
 <div class="jumbotron text-center">
     <h1>Login to Todo Destroyer</h1>
 </div>
-<div class="container col-lg-4 col-sm-12 pt-5">
+<div class="container col-lg-3 col-md-5 col-sm-12">
     <form method="POST" action="">
         <label for="username">Username:</label><br>
         <input class="form-control" type="text" id="username" name="username" placeholder="Username" required><br>
         <label for="password">Password:</label><br>
         <input class="form-control" type="password" id="password" name="password" placeholder="Password" required><br>
-        <input class="btn btn-outline-secondary" type="submit" value="Submit">
+        <div class="ml-auto mr-auto justify-content-center text-center">
+            <button class="btn btn-outline-secondary ml-auto mr-auto" type="submit">Submit</button>
+            <p class="pt-2">Need an account? <a href="signup.php">sign up</a></p>
+        </div>
     </form>
-    <div>
-        Need an account? &nbsp
-    <button class='btn btn-outline-secondary' onclick="window.location.href='signup.php'">Sign Up</button>
-    </div>
+
 </div>
