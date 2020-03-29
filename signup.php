@@ -69,5 +69,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <input class="form-control" type="password" id="password" name="confirm_password"><br>
         <input type="submit" value="Submit">
     </form>
+        <div>
+            Already have an account?
+        <button class='btn-basic' onclick="window.location.href='login.php'">Sign In</button>
+        </div>
     </span>
 </div>

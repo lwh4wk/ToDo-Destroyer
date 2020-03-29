@@ -50,6 +50,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <input class="form-control" type="password" id="password" name="password"><br>
         <input type="submit" value="Submit">
     </form>
-        Need an account?
+        <div>
+            Need an account?
+        <button class='btn-basic' onclick="window.location.href='signup.php'">Sign Up</button>
+        </div>
     </span>
 </div>
