@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result->execute();
         $row = $result->fetch();
         if (password_verify($password, $row[1])) {
-            $_SESSION['username'] = 'username';
+            $_SESSION['username'] = $username;
             $_SESSION['fname'] = $row[2];
             $_SESSION['lname'] = $row[3];
             $result->closeCursor();

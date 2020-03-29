@@ -22,6 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $statement->execute();
         $statement->closeCursor();
     }
+
 }
 ?>
 <head>
@@ -122,45 +123,87 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <section id="todo" hidden>
                 <h1>To Do Items</h1><hr/>
                 <?php
-                if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['addToDo'])) {
-
+                if ($_SERVER['REQUEST_METHOD'] && isset($_POST['addToDo'])) {
+                    $user = $_SESSION['username'];
+                    $title = $_POST['title'];
+                    $description = $_POST['description'];
+                    $statement = $db->prepare("select * from todo where username='$user' and title='$title';");
+                    $statement->execute();
+                    if ($statement->rowCount() > 0) {?>
+                        <form class="" action="" method="POST">
+                            <input value="true" name="addToDo" hidden/>
+                            <div class="row" style="margin: auto">
+                                <div class="col-lg-2 col-sm-12">
+                                    <h3>Add Item:</h3>
+                                </div>
+                                <div class="col-lg-4 col-sm-12">
+                                    <input type="text" class="form-control is-invalid" id="toDoTitleInput" placeholder="Title"
+                                           name="title" value="<?php echo $title ?>" required/>
+                                    <div class="invalid-feedback">A to do item with this title already exists</div>
+                                </div>
+                                <div class="col-lg-4 col-sm-12">
+                                    <input type="text" class="form-control is-valid" id="toDoDescriptionInput"
+                                           placeholder="Description" name="description" value="<?php echo $description ?>" required/>
+                                </div>
+                                <div class="col-lg-2 col-sm-12">
+                                    <input type="submit" class="btn btn-outline-primary" value="Submit"/>
+                                </div>
+                            </div>
+                        </form>
+                        <?php
+                    } else {
+                        ?>
+                        <form class="needs-validating" action="" method="POST">
+                            <input value="true" name="addToDo" hidden/>
+                            <div class="row" style="margin: auto">
+                                <div class="col-lg-2 col-sm-12">
+                                    <h3>Add Item:</h3>
+                                </div>
+                                <div class="col-lg-4 col-sm-12">
+                                    <input type="text" class="form-control" id="toDoTitleInput" placeholder="Title"
+                                           name="title" required/>
+                                    <div class="invalid-feedback">A to do item with this title already exists</div>
+                                </div>
+                                <div class="col-lg-4 col-sm-12">
+                                    <input type="text" class="form-control" id="toDoDescriptionInput"
+                                           placeholder="Description" name="description" required/>
+                                </div>
+                                <div class="col-lg-2 col-sm-12">
+                                    <input type="submit" class="btn btn-outline-primary" value="Submit"/>
+                                </div>
+                            </div>
+                        </form>
+                        <?php
+                        $statement->closeCursor();
+                        $statement = $db->prepare("insert into todo values ('$user', '$title', '$description');");
+                        $statement->execute();
+                        $statement->closeCursor();
+                    }
+                } else {
+                    ?>
+                    <form class="needs-validation" action="" method="POST">
+                        <input value="true" name="addToDo" hidden/>
+                        <div class="row" style="margin: auto">
+                            <div class="col-lg-2 col-sm-12">
+                                <h3>Add Item:</h3>
+                            </div>
+                            <div class="col-lg-4 col-sm-12">
+                                <input type="text" class="form-control" id="toDoTitleInput" placeholder="Title"
+                                       name="title" required/>
+                                <div class="invalid-feedback">A to do item with this title already exists</div>
+                            </div>
+                            <div class="col-lg-4 col-sm-12">
+                                <input type="text" class="form-control" id="toDoDescriptionInput"
+                                       placeholder="Description" name="description" required/>
+                            </div>
+                            <div class="col-lg-2 col-sm-12">
+                                <input type="submit" class="btn btn-outline-primary" value="Submit"/>
+                            </div>
+                        </div>
+                    </form>
+                    <?php
                 }
                 ?>
-                <script>
-                    function checkToDo() {
-                        let xhr = new XMLHttpRequest();
-                        xhr.onreadystatechange = () => {
-                            if (xhr.status === 200 && this.readyState === XMLHttpRequest.DONE) {
-                                if (xhr.responseText == 'true' ) {
-                                    return true;
-                                } else {
-                                    return false;
-                                }
-                            }
-                        }
-                        xhr.open("POST", 'checkExistingToDo.php' false);
-                        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                        xhr.send("title=" + document.getElementById("toDoTitleInput").value);
-                    }
-                </script>
-                <form class="needs-validation" action="" method="POST" onsubmit="return checkToDo();" id="addToDoForm">
-                    <input value="true" name="addToDo" hidden/>
-                    <div class="row" style="margin: auto">
-                        <div class="col-lg-2 col-sm-12">
-                            <h3>Add Item:</h3>
-                        </div>
-                        <div class="col-lg-4 col-sm-12">
-                            <input type="text" class="form-control" id="toDoTitleInput" placeholder="Title" required/>
-                            <div class="invalid-feedback">A to do item with this title alread exists</div>
-                        </div>
-                        <div class="col-lg-4 col-sm-12">
-                            <input type="text" class="form-control" id="toDoDescriptionInput" placeholder="Description" required/>
-                        </div>
-                        <div class="col-lg-2 col-sm-12">
-                            <input type="submit" class="btn btn-outline-primary" value="Submit"/>
-                        </div>
-                    </div>
-                </form>
                 <hr/>
                 <table class="table table-bordered table-hover">
                     <thead class="thead-light">
