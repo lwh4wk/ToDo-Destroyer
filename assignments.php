@@ -1,8 +1,14 @@
 <?php
 if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['remove-assignment'])) {
     $title = $_POST['title'];
-    $due_date = $_POST['dueDate'];
-    $statement = $db->prepare("Delete from \"assignment\" where username='" . $_SESSION['username'] . "' and title='$title' and due_date='$due_date';");
+    $statement = $db->prepare("Select file_path from assignment_file where username='" . $_SESSION['username'] . "' and title='$title'");
+    $statement->execute();
+    foreach ($statement->fetchAll() as $row) {
+        unlink(getcwd() . $row[0]);
+    }
+    $statement = $db->prepare("Delete from assignment_file where username='" . $_SESSION['username'] . "' and title='$title'");
+    $statement->execute();
+    $statement = $db->prepare("Delete from \"assignment\" where username='" . $_SESSION['username'] . "' and title='$title';");
     $statement->execute();
     $statement->closeCursor();
 }
@@ -20,6 +26,20 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['add-assignment'])) {
         $invalid = false;
         $statement = $db->prepare("insert into \"assignment\" values ('$user', '$title', '$description', '$dueDate', '$xp');");
         $statement->execute();
+        if (isset($_FILES['userfiles'])) {
+            $file_count = count($_FILES['userfiles']['name']);
+            for ($i = 0; $i < $file_count; $i++) {
+                if ($_FILES['userfiles']['name'][$i] != "") {
+                    $ext = pathinfo($_FILES['userfiles']['name'][$i])['extension'];
+                    $db_path = "\\files\\" . md5(rand() * time()) . ".$ext";
+                    $uploadfile = getcwd() . $db_path;
+                    move_uploaded_file($_FILES['userfiles']['tmp_name'][$i], $uploadfile);
+                    $statement = $db->prepare("insert into assignment_file values ('$user', '$title', '$db_path')");
+                    echo "insert into assignment_file values ('$user', '$title', '$db_path')";
+                    $statement->execute();
+                }
+            }
+        }
     }
     $statement->closeCursor();
 }
@@ -32,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['add-assignment'])) {
             <h3>Add Assignment:</h3>
         </div>
         <div class="col-lg-9 col-sm-12">
-            <form action="" method="POST">
+            <form action="" method="POST" enctype="multipart/form-data">
                 <input value="true" name="add-assignment" hidden/>
                 <div class="form-row">
                     <div class="col-lg-4 col-sm-12">
@@ -48,13 +68,35 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['add-assignment'])) {
                     </div>
                 </div>
                 <div class="form-row pt-2 pb-2">
-                    <div class="col-lg-6 col-sm-12">
+                    <div class="col-lg-4 col-sm-12">
                         <label for="assignmentXPInput">Experience Points</label>
-                        <input class="form-control <?php if ($invalid) echo "is-valid"; ?>" <?php if ($invalid) echo "value='$xp'"; ?> type="number" placeholder="XP" name="xp" id="assignmentXPInput" required/>
+                        <select class="form-control <?php if ($invalid) echo "is-valid"; ?>" <?php if ($invalid) echo "value='$xp'"; ?> type="number" placeholder="XP" name="xp" id="assignmentXPInput" required>
+                            <option value="">---</option>
+                            <option value="100">100</option>
+                            <option value="500">500</option>
+                            <option value="1000">1000</option>
+                            <option value="2500">2500</option>
+                            <option value="5000">5000</option>
+                        </select>
                     </div>
-                    <div class="col-lg-6 col-sm-12">
-                        <label for="assignmentDueDateInput">Experience Points</label>
+                    <div class="col-lg-4 col-sm-12">
+                        <label for="assignmentDueDateInput">Due Date</label>
                         <input class="form-control <?php if ($invalid) echo "is-valid"; ?>" <?php if ($invalid) echo "value='$dueDate'"; ?> type="date" placeholder="XP" name="dueDate" id="assignmentXPInput" placeholder="mm/dd/yyyy" required/>
+                    </div>
+                    <div class="col-lg-4 col-sm-12">
+                        <label for="customFile">Upload File</label>
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="customFile" name="userfiles[]" oninput="uploadFile();" multiple>
+                            <label class="custom-file-label" for="validatedCustomFile">Choose file...</label>
+                        </div>
+                        <div id="files">
+
+                        </div>
+                        <script>
+                            function uploadFile() {
+                                document.getElementById("files").innerHTML += document.getElementById("customFile").value + "<br/>";
+                            }
+                        </script>
                     </div>
                 </div>
                 <button type="submit" class="btn btn-outline-primary" >Submit</button>
@@ -69,10 +111,14 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['add-assignment'])) {
         <th scope="col">Description</th>
         <th scope="col">XP</th>
         <th scope="col">Due Date</th>
+        <th scope="col">Files</th>
         <th scope="col">Remove</th>
         </thead>
         <tbody>
         <?php
+        $statement = $db->prepare("select * from assignment_file where username='" . $_SESSION['username'] . "';");
+        $statement->execute();
+        $files = $statement->fetchAll();
         $statement = $db->prepare("select * from \"assignment\" where username='" . $_SESSION['username'] . "';");
         $statement->execute();
         if ($statement->rowCount() > 0) {
@@ -88,11 +134,23 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['add-assignment'])) {
                         </script>
                     </td>
                     <td>
+                        <?php
+                        foreach ($files as $file) {
+                            if ($row[0] == $file[0] && $row[1] == $file[1]) {
+                                if (getcwd() == "C:\\xampp\\htdocs\\todo-destroyer") {
+                                    echo "<a href='files/" . substr($file[2], 7) . "' target='_blank'>$file[3]</a><br/>";
+                                } else {
+                                    echo "<a href='$file[2]'>$file[3]</a><br/>";
+                                }
+                            }
+                        }
+                        ?>
+                    </td>
+                    <td>
                         <form action="" method="post"
-                              onsubmit="return confirm('Are you sure you would like to remove this assignment?');">
+                              onsubmit="return confirm('Are you sure you would like to remove this assignment? This will delete all associated files and you will receive no xp.');">
                             <input value="true" name="remove-assignment" hidden/>
                             <input value="<?php echo $row[1] ?>" name="title" hidden/>
-                            <input value="<?php echo $row[3] ?>" name="dueDate" hidden/>
                             <input type="submit" class="btn btn-danger" value="Remove"/>
                         </form>
                     </td>
@@ -101,7 +159,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['add-assignment'])) {
             }
         } else {?>
             <tr>
-                <td colspan="5">You have no assignments.</td>
+                <td colspan="6">You have no assignments.</td>
             </tr><?php
         }
         ?>

@@ -11,7 +11,7 @@
     </ul>
     <ul class="navbar-nav ml-auto">
         <li class="nav-item">
-            <?php if ($_SERVER['REQUEST_URI'] == '/todo-destroyer/login.php') { ?>
+            <?php if ($_SERVER['REQUEST_URI'] == '/todo-destroyer/login.php' || $_SERVER['REQUEST_URI'] == '/login.php') { ?>
                 <a class="nav-link" href="signup.php">Sign Up</a>
             <?php } else { ?>
                 <a class="nav-link" href="login.php">Sign In</a>

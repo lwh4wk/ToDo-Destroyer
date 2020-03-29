@@ -13,6 +13,7 @@
         <thead class="thead-light">
         <th scope="col">Title</th>
         <th scope="col">Description</th>
+        <th scope="col">XP</th>
         </thead>
         <tbody>
         <?php
@@ -22,6 +23,7 @@
             echo "<tr>" .
                     "<td>$row[1]</td>" .
                     "<td>$row[2]</td>" .
+                    "<td>$row[3]</td>" .
                 "</tr>";
         }
         $statement->closeCursor();
@@ -34,6 +36,7 @@
         <thead class="thead-light">
         <th scope="col">Title</th>
         <th scope="col">Description</th>
+        <th scope="col">XP</th>
         <th scope="col">Due Date</th>
         </thead>
         <tbod>
@@ -44,6 +47,7 @@
                 echo "<tr>
                           <td>$row[1]</td>
                           <td>$row[2]</td>
+                          <td>$row[4]</td>
                           <td><script>document.write((new Date('$row[3]')).toDateString())</script></td>
                       </tr>";
             }
