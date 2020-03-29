@@ -50,6 +50,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <input class="form-control" type="password" id="password" name="password"><br>
         <input type="submit" value="Submit">
     </form>
-        <h1></h1>
+        Need an account?
     </span>
 </div>
