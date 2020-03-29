@@ -56,57 +56,82 @@ if (!isset($_SESSION['username'])) {
             <section id="workspace" hidden>
                 <div align="center">
                     <h1>Pomodoro</h1>
-                    <h2 id="timer">25m 0s</h2>
-                    <button class='btn-secondary-outline' onclick="myTimer()">Start counter</button>
-                    <button class='btn-secondary-outline' onclick="clearInterval(x);">Stop counter</button>
-                    <script>
-                        var x;
-                        function myTimer() {
-                            document.getElementById("timer").innerHTML = "25m 0s";
-                            x = setInterval(startPomodoro, 1000);
-                            var distance = 4;
+                    <div>
+                        <h2 id="timer">25m 0s</h2>
+                        <button class='btn-secondary-outline' onclick="myTimer()">Start counter</button>
+                        <button class='btn-secondary-outline' onclick="clearInterval(x);">Stop counter</button>
+                        <script>
+                            var x;
+                            function myTimer() {
+                                document.getElementById("timer").innerHTML = "25m 0s";
+                                x = setInterval(startPomodoro, 1000);
+                                var distance = 4;
 
-                            function startPomodoro() {
-                                var minutes = Math.floor(distance / 60);
-                                var seconds = Math.floor(distance % 60);
-                                document.getElementById("timer").innerHTML = minutes + "m " + seconds + "s ";
-                                distance = distance -1;
-                                if (distance < 0) {
-                                    document.getElementById("timer").innerHTML = "+2500 XP. Great Job!";
-                                    document.getElementById("wealth").innerHTML = Number(document.getElementById("wealth").innerHTML) + 2500;
-                                    clearInterval(x);
+                                function startPomodoro() {
+                                    var minutes = Math.floor(distance / 60);
+                                    var seconds = Math.floor(distance % 60);
+                                    document.getElementById("timer").innerHTML = minutes + "m " + seconds + "s ";
+                                    distance = distance -1;
+                                    if (distance < 0) {
+                                        document.getElementById("timer").innerHTML = "+2500 XP. Great Job!";
+                                        document.getElementById("wealth").innerHTML = Number(document.getElementById("wealth").innerHTML) + 2500;
+                                        document.getElementById("pass_through").value = Number(document.getElementById("wealth").innerHTML) + 2500;
+                                        clearInterval(x);
+                                    }
                                 }
                             }
-                        }
-                    </script>
-                    <h2 id="break_timer">5m 0s</h2>
-                    <button class='btn-secondary-outline' onclick="myBreak()">Start counter</button>
-                    <button class='btn-secondary-outline' onclick="clearInterval(y);">Stop counter</button>
-                    <script>
-                        var y;
-                        function myBreak() {
-                            document.getElementById("break_timer").innerHTML = "5m 0s";
-                            y = setInterval(startPomodoro, 1000);
-                            var distance = 300;
+                        </script>
+                        <h2 id="break_timer">5m 0s</h2>
+                        <button class='btn-secondary-outline' onclick="myBreak()">Start counter</button>
+                        <button class='btn-secondary-outline' onclick="clearInterval(y);">Stop counter</button>
+                        <script>
+                            var y;
+                            function myBreak() {
+                                document.getElementById("break_timer").innerHTML = "5m 0s";
+                                y = setInterval(startPomodoro, 1000);
+                                var distance = 300;
 
-                            function startPomodoro() {
-                                var minutes = Math.floor(distance / 60);
-                                var seconds = Math.floor(distance % 60);
-                                document.getElementById("break_timer").innerHTML = minutes + "m " + seconds + "s ";
-                                distance = distance -1;
-                                if (distance < 0) {
-                                    document.getElementById("break_timer").innerHTML = "Break's over! Let's be productive!";
-                                    clearInterval(y);
+                                function startPomodoro() {
+                                    var minutes = Math.floor(distance / 60);
+                                    var seconds = Math.floor(distance % 60);
+                                    document.getElementById("break_timer").innerHTML = minutes + "m " + seconds + "s ";
+                                    distance = distance -1;
+                                    if (distance < 0) {
+                                        document.getElementById("break_timer").innerHTML = "Break's over! Let's be productive!";
+                                        clearInterval(y);
+                                    }
                                 }
                             }
+                        </script>
+                    </div>
+                    <br>
+                    <div>
+                        <form method="POST" action="">
+                            <img src= images/chest.png alt=Sprite1 width="400" height="300">
+                            <h1 id = wealth>0</h1>
+                            <input value="" id = "pass_through" name="secret_value" hidden>
+                            <button class='btn-secondary-outline'>Collect XP!</button>
+                        </form>
+                    </div>
+                    <?php
+                    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['secret_value'])) {
+                        require("dbconnect.php");
+                        $username = $_SESSION['username'];
+                        $username_list = "SELECT * FROM \"user\" WHERE username= '$username'";
+                        $result = $db->prepare($username_list);
+                        $result->execute();
+                        $row = $result->fetch();
+                        $XP_count = $row[5];
+                        $new_xp = $XP_count + $_POST['secret_value'];
+                        $sql = "INSERT INTO \"user\" (experience_points) value ('$new_xp')";
+                        $statement = $db->prepare($sql);
+                        $statement->execute();
+                        $statement->closeCursor();
                         }
-                    </script>
-                    <h2 id = wealth>0</h2>
+                    ?>
                 </div>
             </section>
         </main>
-
-    </div>
 </div>
 
 

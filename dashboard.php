@@ -51,7 +51,7 @@
         </tbod>
     </table>
     <div align="center">
-        <img src= images/Logan.png alt=Sprite1 width="400" height="500">
+        <img src= images/lil_guy.png alt=Sprite1 width="210" height="400">
     </div>
 
 </section>
