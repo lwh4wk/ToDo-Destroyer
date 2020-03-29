@@ -27,9 +27,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 }
 ?>
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
+</head>
 
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 <style>
     .container {
         position: absolute;
@@ -40,19 +42,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         transform: translateX(-50%) translateY(-50%);
     }
 </style>
-<div class="container">
-    <span>
-        <h1>Login to Todo Destroyer</h1>
+<header>
+    <?php include('navbar.php'); ?>
+</header>
+<div class="jumbotron text-center">
+    <h1>Login to Todo Destroyer</h1>
+</div>
+<div class="container col-lg-4 col-sm-12 pt-5">
     <form method="POST" action="">
         <label for="username">Username:</label><br>
-        <input class="form-control" type="text" id="username" name="username"><br>
+        <input class="form-control" type="text" id="username" name="username" placeholder="Username" required><br>
         <label for="password">Password:</label><br>
-        <input class="form-control" type="password" id="password" name="password"><br>
-        <input type="submit" value="Submit">
+        <input class="form-control" type="password" id="password" name="password" placeholder="Password" required><br>
+        <input class="btn btn-outline-secondary" type="submit" value="Submit">
     </form>
-        <div>
-            Need an account?
-        <button class='btn-basic' onclick="window.location.href='signup.php'">Sign Up</button>
-        </div>
-    </span>
+    <div>
+        Need an account? &nbsp
+    <button class='btn btn-outline-secondary' onclick="window.location.href='signup.php'">Sign Up</button>
+    </div>
 </div>

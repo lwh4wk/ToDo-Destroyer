@@ -6,6 +6,7 @@
             echo "Hello, " . $_SESSION['fname'] . " " . $_SESSION['lname'];
         }
         ?></h3>
+    <?php include('xpbar.php'); ?>
     <hr/>
     <h2>To Do List</h2>
     <table class="table table-bordered table-hover">
