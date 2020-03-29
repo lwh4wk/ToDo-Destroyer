@@ -290,7 +290,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </table>
             </section>
             <section id="workspace" hidden>
+                <div align="center">
+                    <h1>Pomodoro</h1>
+                    <h2 id="timer">25m 0s</h2>
+                    <button onclick="myTimer()">Start counter</button>
+                    <button onclick="clearInterval(x);">Stop counter</button>
+                    <script>
+                        var x;
+                        function myTimer() {
+                            document.getElementById("timer").innerHTML = "25m 0s";
+                            x = setInterval(startPomodoro, 1000);
+                            var distance = 1500;
+                            var break_time = 300;
 
+                            function startPomodoro() {
+                                var minutes = Math.floor(distance / 60);
+                                var seconds = Math.floor(distance % 60);
+                                document.getElementById("timer").innerHTML = minutes + "m " + seconds + "s ";
+                                distance = distance -1;
+                                if (distance < 0) {
+                                    document.getElementById("timer").innerHTML = "25m 0s";
+                                    clearInterval(x);
+                                }
+                            }
+                        }
+                    </script>
+                </div>
             </section>
         </main>
 
