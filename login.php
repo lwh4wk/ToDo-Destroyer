@@ -1,4 +1,8 @@
 <?php
+session_start();
+if (isset($_SESSION['username'])) {
+    header("Location: index.php");
+}
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ((empty($_POST['username'])) or (empty($_POST['password']))) {
         echo 'Fields not filled';

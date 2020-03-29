@@ -19,6 +19,11 @@
         <?php
         $statement = $db->prepare("select * from todo where username='" . $_SESSION['username'] . "';");
         $statement->execute();
+        if ($statement->rowCount() < 1) { ?>
+            <tr>
+                <td colspan="6">You have no to do items. Click <a href="javascript: nav_click('todo');">here</a> to create some.</td>
+            </tr>
+        <?php }
         foreach ($statement->fetchAll() as $row) {
             echo "<tr>" .
                     "<td>$row[1]</td>" .
@@ -43,6 +48,11 @@
             <?php
             $statement = $db->prepare("select * from \"assignment\" where username='" . $_SESSION['username'] . "';");
             $statement->execute();
+            if ($statement->rowCount() < 1) { ?>
+                <tr>
+                    <td colspan="6">You have no assignments. Click <a href="javascript: nav_click('assignments');">here</a> to create some.</td>
+                </tr>
+            <?php }
             foreach ($statement->fetchAll() as $row) {
                 echo "<tr>
                           <td>$row[1]</td>
@@ -51,6 +61,7 @@
                           <td><script>document.write((new Date('$row[3]')).toDateString())</script></td>
                       </tr>";
             }
+            $statement->closeCursor();
             ?>
         </tbod>
     </table>
