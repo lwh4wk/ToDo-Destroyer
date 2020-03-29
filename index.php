@@ -15,17 +15,29 @@ if (!isset($_SESSION['username'])) {
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['secret_value'])) {
         require("dbconnect.php");
         $username = $_SESSION['username'];
-        $username_list = "SELECT experience_points FROM \"user\" WHERE username= '$username'";
+        $username_list = "SELECT experience_points, \"level\" FROM \"user\" WHERE username= '$username'";
         $result = $db->prepare($username_list);
         $result->execute();
         $row = $result->fetch();
         $XP_count = $row[0];
-        //echo (($_POST['secret_value']));
-        $new_xp = ($XP_count) + ($_POST['secret_value']);
-        $sql = "UPDATE \"user\" SET experience_points=$new_xp WHERE username='$username'";
-        $statement = $db->prepare($sql);
-        $statement->execute();
-        $statement->closeCursor();
+        $level = $row[1];
+        $xp = ($XP_count) + ($_POST['secret_value']);
+        //echo $xp;
+        if ($xp >= 5000){
+            $new_xp = $xp - 5000;
+            $new_level = $level + 1;
+            $up_xp = "UPDATE \"user\" SET experience_points=$new_xp, \"level\"=$new_level WHERE username='" . $_SESSION['username'] . "';";
+            $result = $db->prepare($up_xp);
+            $result->execute();
+            $result->closeCursor();
+        }
+        else{
+            $sql = "UPDATE \"user\" SET experience_points=$xp WHERE username='" . $_SESSION['username'] . "';";
+            $statement = $db->prepare($sql);
+            $statement->execute();
+            $statement->closeCursor();
+        }
+
 }
 ?>
 <head>
