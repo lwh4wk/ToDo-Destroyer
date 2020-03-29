@@ -19,8 +19,8 @@
         $statement->execute();
         foreach ($statement->fetchAll() as $row) {
             echo "<tr>" .
-                "<td>$row[1]</td>" .
-                "<td>$row[2]</td>" .
+                    "<td>$row[1]</td>" .
+                    "<td>$row[2]</td>" .
                 "</tr>";
         }
         $statement->closeCursor();
@@ -41,10 +41,10 @@
             $statement->execute();
             foreach ($statement->fetchAll() as $row) {
                 echo "<tr>
-                                      <td>$row[1]</td>
-                                      <td>$row[2]</td>
-                                      <td><script>document.write((new Date('$row[3]')).toDateString())</script></td>
-                                  </tr>";
+                          <td>$row[1]</td>
+                          <td>$row[2]</td>
+                          <td><script>document.write((new Date('$row[3]')).toDateString())</script></td>
+                      </tr>";
             }
             ?>
         </tbod>

@@ -6,9 +6,62 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['remove-assignment'])) 
     $statement->execute();
     $statement->closeCursor();
 }
+$invalid = false;
+if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['add-assignment'])) {
+    $title = $_POST['title'];
+    $description = $_POST['description'];
+    $xp = $_POST['xp'];
+    $dueDate = $_POST['dueDate'];
+    $user = $_SESSION['username'];
+    $statement = $db->prepare("select * from \"assignment\" where username='$user' and title='$title';");
+    $statement->execute();
+    if ($statement->rowCount() > 0) $invalid = true;
+    else {
+        $invalid = false;
+        $statement = $db->prepare("insert into \"assignment\" values ('$user', '$title', '$description', '$dueDate', '$xp');");
+        $statement->execute();
+    }
+    $statement->closeCursor();
+}
 ?>
 <section id="assignments" hidden>
     <h1>Assignments</h1>
+    <hr/>
+    <div class="row">
+        <div class="col-lg-3 col-sm-12">
+            <h3>Add Assignment:</h3>
+        </div>
+        <div class="col-lg-9 col-sm-12">
+            <form action="" method="POST">
+                <input value="true" name="add-assignment" hidden/>
+                <div class="form-row">
+                    <div class="col-lg-4 col-sm-12">
+                        <label for="assignmentTitleInput">Title</label>
+                        <input type="text" class="form-control <?php if ($invalid) echo "is-invalid"; ?>" id="assignmentTitleInput" placeholder="Title"
+                               name="title" <?php if ($invalid) echo "value='$title'"; ?> required/>
+                        <div class="invalid-feedback">An assignment with this title already exists</div>
+                    </div>
+                    <div class="col-lg-8 col-sm-12">
+                        <label for="assignmentDescriptionInput">Description</label>
+                        <input type="text" class="form-control <?php if ($invalid) echo "is-valid"; ?>" id="assignmentDescriptionInput"
+                               placeholder="Description" <?php if ($invalid) echo "value='$description'"; ?> name="description" required/>
+                    </div>
+                </div>
+                <div class="form-row pt-2 pb-2">
+                    <div class="col-lg-6 col-sm-12">
+                        <label for="assignmentXPInput">Experience Points</label>
+                        <input class="form-control <?php if ($invalid) echo "is-valid"; ?>" <?php if ($invalid) echo "value='$xp'"; ?> type="number" placeholder="XP" name="xp" id="assignmentXPInput" required/>
+                    </div>
+                    <div class="col-lg-6 col-sm-12">
+                        <label for="assignmentDueDateInput">Experience Points</label>
+                        <input class="form-control <?php if ($invalid) echo "is-valid"; ?>" <?php if ($invalid) echo "value='$dueDate'"; ?> type="date" placeholder="XP" name="dueDate" id="assignmentXPInput" placeholder="mm/dd/yyyy" required/>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-outline-primary" >Submit</button>
+            </form>
+        </div>
+    </div>
+
     <hr/>
     <table class="table table-bordered table-hover">
         <thead class="thead-light">

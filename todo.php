@@ -91,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['remove-todo'])) {
                     <input type="text" class="form-control" id="toDoDescriptionInput"
                            placeholder="Description" name="description" required/>
                 </div>
-                <div class="col-lg-2 col-sm-12">
+                <div class="col-lg-2 col-sm-12" style="margin-top: auto">
                     <input type="submit" class="btn btn-outline-primary" value="Submit"/>
                 </div>
             </div>
