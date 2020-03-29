@@ -78,6 +78,8 @@ if (!isset($_SESSION['username'])) {
                         <a class="nav-link" href="javascript: nav_click('workspace');">Workspace</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="javascript: nav_click('gamespace');">Gamespace</a>
+                    </li>
                         <a class="nav-link" href="javascript: nav_click('flashcards');">Flashcards</a>
                     </li>
                     <li class="nav-item">
@@ -90,9 +92,11 @@ if (!isset($_SESSION['username'])) {
             <?php
                 include("todo.php");
                 include("assignments.php");
+                include("game.php")
                 include("flashcards.php");
                 include("flashcard-matching.php");
                 include("dashboard.php");
+
             ?>
             <section id="workspace" hidden>
                 <div align="center">
