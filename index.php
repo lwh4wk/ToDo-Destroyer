@@ -92,7 +92,7 @@ if (!isset($_SESSION['username'])) {
             <?php
                 include("todo.php");
                 include("assignments.php");
-                include("game.php")
+                include("game.php");
                 include("flashcards.php");
                 include("flashcard-matching.php");
                 include("dashboard.php");
