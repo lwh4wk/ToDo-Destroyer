@@ -57,11 +57,11 @@
         $row = $statement->fetch();
         $statement->closeCursor();
         $level = $row[0];
-        if ($level < 4){
+        if ($level < 6){
             echo "<img src='images/level_" . (string)$level . ".png" . "' alt='error'>";
         }
         else{
-            echo "<img src='images/level_3.png" . "' alt='error'>";
+            echo "<img src='images/level_6.png" . "' alt='error'>";
         }
         ?>
     </div>
