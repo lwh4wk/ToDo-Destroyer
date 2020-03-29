@@ -74,6 +74,9 @@ if (!isset($_SESSION['username'])) {
                     <li class="nav-item">
                         <a class="nav-link" href="javascript: nav_click('workspace');">Workspace</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="javascript: nav_click('gamespace');">Gamespace</a>
+                    </li>
                 </ul>
             </div>
         </nav>
@@ -82,6 +85,7 @@ if (!isset($_SESSION['username'])) {
                 include("dashboard.php");
                 include("todo.php");
                 include("assignments.php");
+                include("game.php")
             ?>
             <section id="workspace" hidden>
                 <div align="center">
