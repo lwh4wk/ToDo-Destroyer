@@ -1,4 +1,53 @@
 <?php
+$invalid_todo = false;
+if ($_SERVER['REQUEST_METHOD'] && isset($_POST['addToDo'])) {
+    $user = $_SESSION['username'];
+    $title = $_POST['title'];
+    $description = $_POST['description'];
+    $xp = $_POST['xp'];
+    $statement = $db->prepare("select * from todo where username='$user' and title='$title';");
+    $statement->execute();
+    if ($statement->rowCount() > 0) {
+        $invalid_todo = true;
+    } else {
+        $invalid_todo = false;
+        $statement->closeCursor();
+        $statement = $db->prepare("insert into todo values ('$user', '$title', '$description', '$xp');");
+        $statement->execute();
+        $statement->closeCursor();
+    }
+}
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['remove-todo'])) {
+    $title = $_POST['title'];
+    $statement = $db->prepare("Delete From todo where username='" . $_SESSION['username'] . "' and title='$title'");
+    $statement->execute();
+    $statement->closeCursor();
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['complete-todo'])) {
+    $title = $_POST['title'];
+    $description = $_POST['description'];
+    $xp = $_POST['xp'];
+    $username = $_SESSION['username'];
+    $statement = $db->prepare("select experience_points, \"level\" from \"user\" where username='$username';");
+    $statement->execute();
+    $row = $statement->fetch();
+    $new_xp = $row[0];
+    $level = $row[1];
+    if (($new_xp + $xp) >= 5000) {
+        $new_xp += $xp;
+        $new_xp -= 5000;
+        $level ++;
+    } else {
+        $new_xp += $xp;
+    }
+    $statement = $db->prepare("update \"user\" set experience_points=$new_xp, \"level\"=$level where username='$username';");
+    $statement->execute();
+    $statement = $db->prepare("Insert Into completed_todo values ('$username', '$title', $xp, CURRENT_TIMESTAMP, '$description');");
+    $statement->execute();
+    $statement = $db->prepare("Delete from todo where username='$username' and title='$title';");
+    $statement->execute();
+}
 ?>
 <section id="todo" hidden>
     <h1>To Do Items</h1><hr/>
