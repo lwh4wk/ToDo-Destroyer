@@ -57,15 +57,14 @@ if (!isset($_SESSION['username'])) {
                 <div align="center">
                     <h1>Pomodoro</h1>
                     <h2 id="timer">25m 0s</h2>
-                    <button onclick="myTimer()">Start counter</button>
-                    <button onclick="clearInterval(x);">Stop counter</button>
+                    <button class='btn-secondary-outline' onclick="myTimer()">Start counter</button>
+                    <button class='btn-secondary-outline' onclick="clearInterval(x);">Stop counter</button>
                     <script>
                         var x;
                         function myTimer() {
                             document.getElementById("timer").innerHTML = "25m 0s";
                             x = setInterval(startPomodoro, 1000);
-                            var distance = 1500;
-                            var break_time = 300;
+                            var distance = 4;
 
                             function startPomodoro() {
                                 var minutes = Math.floor(distance / 60);
@@ -73,12 +72,36 @@ if (!isset($_SESSION['username'])) {
                                 document.getElementById("timer").innerHTML = minutes + "m " + seconds + "s ";
                                 distance = distance -1;
                                 if (distance < 0) {
-                                    document.getElementById("timer").innerHTML = "25m 0s";
+                                    document.getElementById("timer").innerHTML = "+2500 XP. Great Job!";
+                                    document.getElementById("wealth").innerHTML = Number(document.getElementById("wealth").innerHTML) + 2500;
                                     clearInterval(x);
                                 }
                             }
                         }
                     </script>
+                    <h2 id="break_timer">5m 0s</h2>
+                    <button class='btn-secondary-outline' onclick="myBreak()">Start counter</button>
+                    <button class='btn-secondary-outline' onclick="clearInterval(y);">Stop counter</button>
+                    <script>
+                        var y;
+                        function myBreak() {
+                            document.getElementById("break_timer").innerHTML = "5m 0s";
+                            y = setInterval(startPomodoro, 1000);
+                            var distance = 300;
+
+                            function startPomodoro() {
+                                var minutes = Math.floor(distance / 60);
+                                var seconds = Math.floor(distance % 60);
+                                document.getElementById("break_timer").innerHTML = minutes + "m " + seconds + "s ";
+                                distance = distance -1;
+                                if (distance < 0) {
+                                    document.getElementById("break_timer").innerHTML = "Break's over! Let's be productive!";
+                                    clearInterval(y);
+                                }
+                            }
+                        }
+                    </script>
+                    <h2 id = wealth>0</h2>
                 </div>
             </section>
         </main>
