@@ -51,7 +51,19 @@
         </tbod>
     </table>
     <div align="center">
-        <img src= images/lil_guy.png alt=Sprite1 width="210" height="400">
+        <?php
+        $statement = $db->prepare("select \"level\" from \"user\" where username='" . $_SESSION['username'] . "';");
+        $statement->execute();
+        $row = $statement->fetch();
+        $statement->closeCursor();
+        $level = $row[0];
+        if ($level < 4){
+            echo "<img src='images/level_" . (string)$level . ".png" . "' alt='error'>";
+        }
+        else{
+            echo "<img src='images/level_3.png" . "' alt='error'>";
+        }
+        ?>
     </div>
 
 </section>
