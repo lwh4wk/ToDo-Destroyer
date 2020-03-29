@@ -10,6 +10,24 @@ if (!isset($_SESSION['username'])) {
 
 
 ?>
+
+<?php
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['secret_value'])) {
+        require("dbconnect.php");
+        $username = $_SESSION['username'];
+        $username_list = "SELECT experience_points FROM \"user\" WHERE username= '$username'";
+        $result = $db->prepare($username_list);
+        $result->execute();
+        $row = $result->fetch();
+        $XP_count = $row[0];
+        //echo (($_POST['secret_value']));
+        $new_xp = ($XP_count) + ($_POST['secret_value']);
+        $sql = "UPDATE \"user\" SET experience_points=$new_xp WHERE username='$username'";
+        $statement = $db->prepare($sql);
+        $statement->execute();
+        $statement->closeCursor();
+}
+?>
 <head>
     <title>Dashboard</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
@@ -74,8 +92,8 @@ if (!isset($_SESSION['username'])) {
                                     distance = distance -1;
                                     if (distance < 0) {
                                         document.getElementById("timer").innerHTML = "+2500 XP. Great Job!";
-                                        document.getElementById("wealth").innerHTML = Number(document.getElementById("wealth").innerHTML) + 2500;
-                                        document.getElementById("pass_through").value = Number(document.getElementById("wealth").innerHTML) + 2500;
+                                        document.getElementById("wealth").innerHTML = String(Number(document.getElementById("wealth").innerHTML) + 2500);
+                                        document.getElementById("secret_value").value = Number(document.getElementById("wealth").innerHTML);
                                         clearInterval(x);
                                     }
                                 }
@@ -109,26 +127,10 @@ if (!isset($_SESSION['username'])) {
                         <form method="POST" action="">
                             <img src= images/chest.png alt=Sprite1 width="400" height="300">
                             <h1 id = wealth>0</h1>
-                            <input value="" id = "pass_through" name="secret_value" hidden>
+                            <input value="" id ="secret_value" name="secret_value" hidden>
                             <button class='btn-secondary-outline'>Collect XP!</button>
                         </form>
                     </div>
-                    <?php
-                    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['secret_value'])) {
-                        require("dbconnect.php");
-                        $username = $_SESSION['username'];
-                        $username_list = "SELECT * FROM \"user\" WHERE username= '$username'";
-                        $result = $db->prepare($username_list);
-                        $result->execute();
-                        $row = $result->fetch();
-                        $XP_count = $row[5];
-                        $new_xp = $XP_count + $_POST['secret_value'];
-                        $sql = "INSERT INTO \"user\" (experience_points) value ('$new_xp')";
-                        $statement = $db->prepare($sql);
-                        $statement->execute();
-                        $statement->closeCursor();
-                        }
-                    ?>
                 </div>
             </section>
         </main>
