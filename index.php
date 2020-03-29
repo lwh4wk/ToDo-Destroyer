@@ -38,7 +38,10 @@ if (!isset($_SESSION['username'])) {
             $statement->closeCursor();
         }
 
-}
+    }
+
+
+
 ?>
 <head>
     <title>Dashboard</title>
@@ -77,15 +80,23 @@ if (!isset($_SESSION['username'])) {
                     <li class="nav-item">
                         <a class="nav-link" href="javascript: nav_click('gamespace');">Gamespace</a>
                     </li>
+                        <a class="nav-link" href="javascript: nav_click('flashcards');">Flashcards</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="javascript: nav_click('flashcard-matching');">Flashcard Matching</a>
+                    </li>
                 </ul>
             </div>
         </nav>
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
             <?php
-                include("dashboard.php");
                 include("todo.php");
                 include("assignments.php");
                 include("game.php")
+                include("flashcards.php");
+                include("flashcard-matching.php");
+                include("dashboard.php");
+
             ?>
             <section id="workspace" hidden>
                 <div align="center">
