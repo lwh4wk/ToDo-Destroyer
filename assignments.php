@@ -1,13 +1,7 @@
 <?php
 if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['remove-assignment'])) {
     $title = $_POST['title'];
-    $statement = $db->prepare("Select file_path from assignment_file where username='" . $_SESSION['username'] . "' and title='$title'");
-    $statement->execute();
-    foreach ($statement->fetchAll() as $row) {
-        unlink(getcwd() . $row[0]);
-    }
-    $statement = $db->prepare("Delete from assignment_file where username='" . $_SESSION['username'] . "' and title='$title'");
-    $statement->execute();
+
     $statement = $db->prepare("Delete from \"assignment\" where username='" . $_SESSION['username'] . "' and title='$title';");
     $statement->execute();
     $statement->closeCursor();
@@ -26,20 +20,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['add-assignment'])) {
         $invalid = false;
         $statement = $db->prepare("insert into \"assignment\" values ('$user', '$title', '$description', '$dueDate', '$xp');");
         $statement->execute();
-        if (isset($_FILES['userfiles'])) {
-            $file_count = count($_FILES['userfiles']['name']);
-            for ($i = 0; $i < $file_count; $i++) {
-                if ($_FILES['userfiles']['name'][$i] != "") {
-                    $ext = pathinfo($_FILES['userfiles']['name'][$i])['extension'];
-                    $db_path = "\\files\\" . md5(rand() * time()) . ".$ext";
-                    $uploadfile = getcwd() . $db_path;
-                    move_uploaded_file($_FILES['userfiles']['tmp_name'][$i], $uploadfile);
-                    $statement = $db->prepare("insert into assignment_file values ('$user', '$title', '$db_path')");
-                    echo "insert into assignment_file values ('$user', '$title', '$db_path')";
-                    $statement->execute();
-                }
-            }
-        }
     }
     $statement->closeCursor();
 }
@@ -68,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['add-assignment'])) {
                     </div>
                 </div>
                 <div class="form-row pt-2 pb-2">
-                    <div class="col-lg-4 col-sm-12">
+                    <div class="col-lg-6 col-sm-12">
                         <label for="assignmentXPInput">Experience Points</label>
                         <select class="form-control <?php if ($invalid) echo "is-valid"; ?>" <?php if ($invalid) echo "value='$xp'"; ?> type="number" placeholder="XP" name="xp" id="assignmentXPInput" required>
                             <option value="">---</option>
@@ -79,24 +59,9 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['add-assignment'])) {
                             <option value="5000">5000</option>
                         </select>
                     </div>
-                    <div class="col-lg-4 col-sm-12">
+                    <div class="col-lg-6 col-sm-12">
                         <label for="assignmentDueDateInput">Due Date</label>
                         <input class="form-control <?php if ($invalid) echo "is-valid"; ?>" <?php if ($invalid) echo "value='$dueDate'"; ?> type="date" placeholder="XP" name="dueDate" id="assignmentXPInput" placeholder="mm/dd/yyyy" required/>
-                    </div>
-                    <div class="col-lg-4 col-sm-12">
-                        <label for="customFile">Upload File</label>
-                        <div class="custom-file">
-                            <input type="file" class="custom-file-input" id="customFile" name="userfiles[]" oninput="uploadFile();" multiple>
-                            <label class="custom-file-label" for="validatedCustomFile">Choose file...</label>
-                        </div>
-                        <div id="files">
-
-                        </div>
-                        <script>
-                            function uploadFile() {
-                                document.getElementById("files").innerHTML += document.getElementById("customFile").value + "<br/>";
-                            }
-                        </script>
                     </div>
                 </div>
                 <button type="submit" class="btn btn-outline-primary" >Submit</button>
@@ -111,7 +76,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['add-assignment'])) {
         <th scope="col">Description</th>
         <th scope="col">XP</th>
         <th scope="col">Due Date</th>
-        <th scope="col">Files</th>
         <th scope="col">Remove</th>
         </thead>
         <tbody>
@@ -132,19 +96,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['add-assignment'])) {
                             date = "<?php echo $row[3]; ?>".split('-');
                             document.write(new Date(parseInt(date[0]), parseInt(date[1]) - 1, parseInt(date[2])).toDateString());
                         </script>
-                    </td>
-                    <td>
-                        <?php
-                        foreach ($files as $file) {
-                            if ($row[0] == $file[0] && $row[1] == $file[1]) {
-                                if (getcwd() == "C:\\xampp\\htdocs\\todo-destroyer") {
-                                    echo "<a href='files/" . substr($file[2], 7) . "' target='_blank'>$file[3]</a><br/>";
-                                } else {
-                                    echo "<a href='$file[2]'>$file[3]</a><br/>";
-                                }
-                            }
-                        }
-                        ?>
                     </td>
                     <td>
                         <form action="" method="post"
