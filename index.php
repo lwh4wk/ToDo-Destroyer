@@ -80,6 +80,7 @@ if (!isset($_SESSION['username'])) {
                     <li class="nav-item">
                         <a class="nav-link" href="javascript: nav_click('gamespace');">Gamespace</a>
                     </li>
+                    <li>
                         <a class="nav-link" href="javascript: nav_click('flashcards');">Flashcards</a>
                     </li>
                     <li class="nav-item">
