@@ -1,5 +1,5 @@
 <section id="gamespace" hidden>
-    <h1>Games!</h1>
+    <h1>Games!</h1><hr/>
     <?php
         $username = $_SESSION['username'];
         $user_level = "SELECT \"level\", experience_points FROM \"user\" WHERE username= '$username'";
@@ -16,7 +16,7 @@
             foreach (range(1, $level) as $number) {
                 echo "<input type=\"button\" id='$number' name='level_choice' value='$number' onclick='runGame($number)'> ";
             }
-            echo "</form>";
+            echo "</form><hr/>";
 
         }
     ?>
