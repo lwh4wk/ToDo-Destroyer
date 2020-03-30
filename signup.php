@@ -25,9 +25,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $statement->execute();
         #echo $statement->fetch();
         $statement->closeCursor();
-        $_SESSION['username'] = 'username';
-        $_SESSION['fname'] = 'fname';
-        $_SESSION['lname'] = 'lname';
+        $_SESSION['username'] = $username;
+        $_SESSION['fname'] = $fname;
+        $_SESSION['lname'] = $lname;
         header("Location: index.php");
     }
 }

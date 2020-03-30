@@ -83,9 +83,6 @@ if (!isset($_SESSION['username'])) {
                     <li>
                         <a class="nav-link" href="javascript: nav_click('flashcards');">Flashcards</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="javascript: nav_click('flashcard-matching');">Flashcard Matching</a>
-                    </li>
                 </ul>
             </div>
         </nav>
@@ -95,7 +92,6 @@ if (!isset($_SESSION['username'])) {
                 include("assignments.php");
                 include("game.php");
                 include("flashcards.php");
-                include("flashcard-matching.php");
                 include("dashboard.php");
 
             ?>
