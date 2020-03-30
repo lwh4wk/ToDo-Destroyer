@@ -1,8 +1,8 @@
 <?php
 $invalid_set = false;
-if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['title'])) {
+if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['title-set'])) {
     $username = $_SESSION['username'];
-    $title = $_POST['title'];
+    $title = $_POST['title-set'];
     $statement = $db->prepare("select * from card_set where username='$username' and title='$title';");
     $statement->execute();
     if ($statement->rowCount() > 0) {
@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['title_remove'])) {
             <div class="col-lg-9 col-sm-12">
                 <form class="form-row" action="" method="post">
                     <div class="col-8">
-                        <input class="form-control <?php if ($invalid_set) echo 'is-invalid'; ?>" type="text" id="set_title" name="title" placeholder="Title" required/>
+                        <input class="form-control <?php if ($invalid_set) echo 'is-invalid'; ?>" type="text" id="set_title" name="title-set" placeholder="Title" required/>
                         <div class="invalid-feedback">
                             This set already exists.
                         </div>
