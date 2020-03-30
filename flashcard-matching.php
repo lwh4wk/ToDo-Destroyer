@@ -11,6 +11,8 @@
                 </select>
             </form>
         </div>
+        <hr/>
+        
     </div>
     <script>
         function selectSet() {
