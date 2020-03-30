@@ -45,9 +45,9 @@
                 var player1 =
                     Crafty.e('Player, Canvas, Color, Twoway, Gravity')
                         .attr({x: 0, y: 250, w: 50, h: 50})
-                        .color('#F00')
+                        .color('#6600ff')
                         .twoway(200)
-                        .gravityConst(700)
+                        .gravityConst(600)
                         .gravity('Floor');
 
                 function drop()
@@ -55,8 +55,8 @@
                     //document.getElementById("timer").innerHTML = "+2500 XP. Great Job!";
                     var randomy = Math.floor((Math.random() * 250) +50);
                     Crafty.e('Drop, 2D, Canvas, Color, Solid, Gravity, Collision')
-                        .attr({x: screenWidth, y: randomy, w: 50, h: 10})
-                        .color('#ff3300')
+                        .attr({x: screenWidth, y: randomy, w: 60, h: 60})
+                        .color('#cc0000')
                         .checkHits('Player')
                         .bind("EnterFrame", function() {
                             if (this.x < 0){
@@ -81,7 +81,7 @@
 
                 Crafty.bind("EnterFrame", function(){
                     var arr = Crafty("2D").get();
-                    if (arr.length-2 < level_number){
+                    if (arr.length < 3){
                         drop();
                     }
                 });
