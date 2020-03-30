@@ -1,20 +1,24 @@
 <section id="gamespace" hidden>
     <h1>Games!</h1>
-    <h2>Lives Available: </h2>
     <?php
         $username = $_SESSION['username'];
-        $user_level = "SELECT \"level\" FROM \"user\" WHERE username= '$username'";
+        $user_level = "SELECT \"level\", experience_points FROM \"user\" WHERE username= '$username'";
         $result = $db->prepare($user_level);
         $result->execute();
-        $level = $result->fetch();
-        $level = $level[0];
-        echo "Level Selection:";
-        echo "<form>";
-        foreach (range(1, $level) as $number) {
-            echo "<input type=\"button\" id='$number' name='level_choice' value='$number' onclick='runGame($number)'> ";
-            //echo "<label for='$number'>$number</label>&nbsp &nbsp";
+        $level_xp = $result->fetch();
+        $level = $level_xp[0];
+        $xp = $level_xp[1];
+        if($xp >= 100){
+            echo "<h2>Buy a life!</h2>";
+            echo "<p>Warning: 100 xp per life! </p>";
+            echo "Level Selection:";
+            echo "<form>";
+            foreach (range(1, $level) as $number) {
+                echo "<input type=\"button\" id='$number' name='level_choice' value='$number' onclick='runGame($number)'> ";
+            }
+            echo "</form>";
+
         }
-        echo "</form>";
     ?>
     <div align="center">
     <html>
@@ -70,6 +74,8 @@
                             this.destroy();
                             player1.x = 0;
                             score = 0;
+                            //Crafty.stop(true)
+                            window.location.href="index.php";
                         });
                 }
 
